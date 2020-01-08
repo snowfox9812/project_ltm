@@ -67,12 +67,12 @@ void printMenu()
 	printf("	Please enter your choice : \n");
 	printf("      **: ");
 }
-int main()
+int main(int argc, char* argv[])
 {
 	signal(SIGINT,INThandler);
 	int n,t,i;
 	char c;
-	i=createConnection(5550,"127.0.0.1");
+	i=createConnection(5550,argv[1]);
 	if (i==FAIL)return 1;
 	while(1){
 		t=-1; // bien t check trang thai cua signup
