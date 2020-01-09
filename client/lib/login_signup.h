@@ -88,9 +88,31 @@ int signUp(protocol *p)
 
 //reqest sigin
 int requestSignin(protocol *p){
+
+	//gui thong tin
+	FILE *fptr;
+	char buffer[1000];
+	char temp[1000];
+	fptr = fopen("client_protocol_data.txt","w");       /* if it is y or Y, then    */
 	p->p_state = CONNECTED;
 	strcpy(p->p_message,WANT_TO_SIGNIN);
-	send(sockfd,p,sizeof(protocol),0);
+
+	sprintf(buffer, "%d", p->p_state);
+	fputs(buffer,fptr);
+	for (int i = 1; i <= 20 ; i++) {
+		fputs("\n",fptr);
+	}
+	fputs(p->p_message,fptr);
+	fclose(fptr);
+
+	fptr = fopen("client_protocol_data.txt" ,"r");
+	while(fgets(buffer, sizeof(buffer), fptr) != NULL) {
+		strcat(temp,buffer);
+	}
+	fclose(fptr);
+	send(sockfd,temp,sizeof(temp),0);
+//gui thong tin
+
 	recv(sockfd,p,sizeof(protocol),0);
 	if (p->p_state==UNAUTHENTICATE)return 1;
 	else return 0;
