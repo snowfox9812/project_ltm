@@ -113,7 +113,26 @@ int requestSignin(protocol *p){
 	send(sockfd,temp,sizeof(temp),0);
 //gui thong tin
 
-	recv(sockfd,p,sizeof(protocol),0);
+
+//nhan thong tin
+	recv(sockfd,buffer,sizeof(buffer),0);
+	fputs(buffer,fptr);
+	fclose(fptr);
+
+	fptr = fopen("client_protocol_data.txt", "r");
+	fgets(temp, sizeof(temp), fptr);
+	p->p_state = atoi(temp);
+	fgets(temp, sizeof(temp), fptr);
+	strcpy(p->p_user_info.user_id, temp);
+	fgets(temp, sizeof(temp), fptr);
+	strcpy(p->p_user_info.password, temp);
+	for (int count = 1; count <= 17; count ++ ) {
+	fgets(temp, sizeof(temp), fptr);
+	}
+	fgets(temp, sizeof(temp), fptr);
+	strcpy(p->p_message, temp);
+	fclose(fptr);
+
 	if (p->p_state==UNAUTHENTICATE)return 1;
 	else return 0;
 

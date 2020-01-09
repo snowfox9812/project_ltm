@@ -108,9 +108,30 @@ int main(int argc, char* argv[])
 				t=signIn(&p);
 				if (t==-1) continue;
 
+//gui thong tin
+				FILE *fptr;
+				char buffer[1000];
+				char temp[1000];
+				fptr = fopen("client_protocol_data.txt","w");       /* if it is y or Y, then    */
+				sprintf(buffer, "%d", p.p_state);
+				fputs(buffer,fptr);
+				fputs("\n",fptr);
+				fputs(p.p_user_info.user_id, fptr);
+				fputs("\n",fptr);
+				fputs(p.p_user_info.password, fptr);
+				for (int i = 1; i <= 18 ; i++) {
+				fputs("\n",fptr);
+				}
+				fputs(p.p_message,fptr);
+				fclose(fptr);
 
-				send(sockfd,&p,sizeof(protocol),0);
-
+				fptr = fopen("client_protocol_data.txt" ,"r");
+				while(fgets(buffer, sizeof(buffer), fptr) != NULL) {
+					strcat(temp,buffer);
+				}
+				fclose(fptr);
+				send(sockfd,temp,sizeof(temp),0);
+//gui thong tin
 				
 				recv(sockfd,&p,sizeof(protocol),0);
 				switch(p.p_state){
