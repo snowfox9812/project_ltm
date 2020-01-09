@@ -43,7 +43,7 @@ void do_signup(protocol *p){
 
 void allow_signin(protocol *p){
   p->p_state = UNAUTHENTICATE;
-  set_empty_user(&(p->p_user_info));
+  //set_empty_user(&(p->p_user_info));
   set_empty_title(&(p->p_title));
   p->p_q_num = 0;
   set_empty_question(&(p->p_question));

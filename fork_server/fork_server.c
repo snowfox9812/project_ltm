@@ -36,7 +36,6 @@ void sig_chld(int signo){
 }
 
 int main(int argc, char const *argv[]) {
-  char sent[1000];
   if(!init_server()){
     exit(-1);
   }
@@ -56,6 +55,8 @@ int main(int argc, char const *argv[]) {
 			int rc;
 
       while(1){
+        char sent[1000] ="";
+
 				FD_SET(conn_fd,&readfds);	/*call it per each loop round*/
 				if(set_to_flag){
 					printf("start countdown\n");
@@ -127,6 +128,7 @@ int main(int argc, char const *argv[]) {
                 fptr = fopen("server_protocol_data.txt","w");       /* if it is y or Y, then    */
                 sprintf(buffer, "%d", p.p_state);
                 fputs(buffer,fptr);
+                //printf("%s\n",p.p_user_info.user_id);
                 fputs("\n",fptr);
                 fputs(p.p_user_info.user_id, fptr);
                 fputs("\n",fptr);
@@ -142,6 +144,7 @@ int main(int argc, char const *argv[]) {
                   strcat(temp,buffer);
                 }
                 strcpy(sent, temp);
+                printf("%s",temp);
                 fclose(fptr);
 //gui thong tin
                 }
@@ -149,6 +152,8 @@ int main(int argc, char const *argv[]) {
                 do_signup(&p);
               } else if(state == UNAUTHENTICATE){
                 do_signin(&p);
+
+
               } else if (state == AUTHENTICATE) {
                 if(!strcmp(p.p_message,WANT_TO_PLAY)){
                   send_titles(&p,200);  /*change state to PLAYING then send 2 titles to client*/
