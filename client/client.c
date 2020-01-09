@@ -46,15 +46,15 @@ void  INThandler(int sig)
 		//fwrite(p.p_message, 1,  sizeof(p.p_message), fptr);
 		fputs(p.p_message,fptr);
 		fclose(fptr);
-		char temp[1000];
+
 		fptr = fopen("client_protocol_data.txt" ,"r");
 		while(fgets(buffer, sizeof(buffer), fptr) != NULL) {
-			strcat(temp,buffer);
 		}
 		fclose(fptr);
-		printf("%s",temp);
+
+
           // send(sockfd,&p,sizeof(protocol),0);
-		send(sockfd,temp,sizeof(temp),0);
+		send(sockfd,buffer,sizeof(buffer),0);
 
           exit(0);                      /* exit.  Otherwise,        */
      }

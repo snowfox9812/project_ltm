@@ -78,27 +78,29 @@ int main(int argc, char const *argv[]) {
           if(FD_ISSET(conn_fd,&readfds)){
             protocol p;
             FILE *fptr;
-            char buffer;
-            char temp;
+            char buffer[1000];
+            char temp[1000];
             fptr = fopen("server_protocol_data.txt", "w");
 
             
 
             // int bytes_recv = recv(conn_fd,&p,sizeof(protocol),0);
 
-            int bytes_recv = recv(conn_fd,buffer,sizeof(char),0);
-
-            fwrite(buffer, 1,  sizeof(char), fptr);
+            int bytes_recv = recv(conn_fd,buffer,sizeof(buffer),0);
+            //printf("%s",buffer);
+            
+            //fwrite(buffer, 1,  sizeof(buffer), fptr);
+            fputs(buffer,fptr);
             fclose(fptr);
 
             fptr = fopen("server_protocol_data.txt", "r");
             
-            fgets(temp, sizeof(char), fptr);
-            strcpy(p.p_state,temp);
+            fgets(temp, sizeof(temp), fptr);
+            p.p_state = atoi(temp);
             for (int count = 1; count <= 19; count ++ ) {
-              fgets(temp, sizeof(char), fptr);
+              fgets(temp, sizeof(temp), fptr);
             }
-            fgets(temp, sizeof(char), fptr);
+            fgets(temp, sizeof(temp), fptr);
             strcpy(p.p_message, temp);
             fclose(fptr);
 

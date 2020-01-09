@@ -88,10 +88,37 @@ int signUp(protocol *p)
 
 //reqest sigin
 int requestSignin(protocol *p){
-	p->p_state = CONNECTED;
-	strcpy(p->p_message,WANT_TO_SIGNIN);
-	send(sockfd,p,sizeof(protocol),0);
-	recv(sockfd,p,sizeof(protocol),0);
+	// p->p_state = CONNECTED;
+	// strcpy(p->p_message,WANT_TO_SIGNIN);
+
+
+	FILE *fptr;
+		char buffer[1000];
+		fptr = fopen("client_protocol_data.txt","w");       /* if it is y or Y, then    */
+          p->p_state = CONNECTED;
+          strcpy(p->p_message,WANT_TO_SIGNIN);
+
+  		sprintf(buffer, "%d", p->p_state);
+		fputs(buffer,fptr);
+
+		for (int temp = 1; temp <= 20 ; temp++) {
+			fputs("\n",fptr);
+		}
+		fputs(p->p_message,fptr);
+		fclose(fptr);
+		char temp[1000];
+		fptr = fopen("client_protocol_data.txt" ,"r");
+		while(fgets(buffer, sizeof(buffer), fptr) != NULL) {
+			strcat(temp,buffer);
+		}
+		fclose(fptr);
+		printf("%s", temp);
+		send(sockfd,temp,sizeof(temp),0);
+
+	// send(sockfd,p,sizeof(protocol),0);
+	// recv(sockfd,p,sizeof(protocol),0);
+
+
 	if (p->p_state==UNAUTHENTICATE)return 1;
 	else return 0;
 
