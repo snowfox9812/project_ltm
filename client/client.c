@@ -36,11 +36,15 @@ void  INThandler(int sig)
 		fptr = fopen("client_protocol_data.txt","w");       /* if it is y or Y, then    */
           p.p_state = AUTHENTICATE;
           strcpy(p.p_message,WANT_TO_SIGNOUT);
-		fwrite(&p.p_state, 1,  sizeof(int), fptr);
+
+  		sprintf(buffer, "%d", p.p_state);
+		fputs(buffer,fptr);
 		for (int temp = 1; temp <= 20 ; temp++) {
-			fwrite("\n", 1, sizeof(char), fptr);
+			//fwrite("\n", 1, sizeof(char), fptr);
+			fputs("\n",fptr);
 		}
-		fwrite(strcat(p.p_message, "\n"), 1,  sizeof(p.p_message), fptr);
+		//fwrite(p.p_message, 1,  sizeof(p.p_message), fptr);
+		fputs(p.p_message,fptr);
 		fclose(fptr);
 
 		fptr = fopen("client_protocol_data.txt" ,"r");
