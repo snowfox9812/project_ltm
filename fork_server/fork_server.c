@@ -36,6 +36,7 @@ void sig_chld(int signo){
 }
 
 int main(int argc, char const *argv[]) {
+  char sent[1000];
   if(!init_server()){
     exit(-1);
   }
@@ -77,6 +78,8 @@ int main(int argc, char const *argv[]) {
         } else{
           if(FD_ISSET(conn_fd,&readfds)){
             protocol p;
+
+
 //Nhan thong tin           
             FILE *fptr;
             char buffer[1000];
@@ -97,6 +100,8 @@ int main(int argc, char const *argv[]) {
             strcpy(p.p_message, temp);
             fclose(fptr);
 //Nhan thong tin
+
+
             if(bytes_recv < 0){
               // Recv() error
               printf("receiving error\n" );
@@ -115,6 +120,30 @@ int main(int argc, char const *argv[]) {
                   allow_signup(&p);
                 } else if(!strcmp(p.p_message,WANT_TO_SIGNIN)){
                   allow_signin(&p);
+//gui thong tin
+                FILE *fptr;
+                char buffer[1000];
+                char temp[1000];
+                fptr = fopen("server_protocol_data.txt","w");       /* if it is y or Y, then    */
+                sprintf(buffer, "%d", p.p_state);
+                fputs(buffer,fptr);
+                fputs("\n",fptr);
+                fputs(p.p_user_info.user_id, fptr);
+                fputs("\n",fptr);
+                fputs(p.p_user_info.password, fptr);
+                for (int i = 1; i <= 18 ; i++) {
+                  fputs("\n",fptr);
+                }
+                fputs(p.p_message,fptr);
+                fclose(fptr);
+
+                fptr = fopen("server_protocol_data.txt" ,"r");
+                while(fgets(buffer, sizeof(buffer), fptr) != NULL) {
+                  strcat(temp,buffer);
+                }
+                strcpy(sent, temp);
+                fclose(fptr);
+//gui thong tin
                 }
               } else if(state == SIGNUP){
                 do_signup(&p);
@@ -148,7 +177,8 @@ int main(int argc, char const *argv[]) {
               }
 
 
-              send(conn_fd,&p,sizeof(protocol),0);
+              // send(conn_fd,&p,sizeof(protocol),0);
+              send(conn_fd,sent,sizeof(sent),0);
             }
           }
         }

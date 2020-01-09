@@ -89,7 +89,7 @@ int signUp(protocol *p)
 //reqest sigin
 int requestSignin(protocol *p){
 
-	//gui thong tin
+//gui thong tin
 	FILE *fptr;
 	char buffer[1000];
 	char temp[1000];

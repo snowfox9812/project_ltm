@@ -27,29 +27,31 @@ void  INThandler(int sig)
      printf("Do you really want to quit? [y/n] ");
      c = getchar();                     /* read an input character  */
      if (c == 'y' || c == 'Y'){
-//gui thong tin
-		FILE *fptr;
-		char buffer[1000];
-		char temp[1000];
-		fptr = fopen("client_protocol_data.txt","w");       /* if it is y or Y, then    */
-          p.p_state = AUTHENTICATE;
-          strcpy(p.p_message,WANT_TO_SIGNOUT);
 
-  		sprintf(buffer, "%d", p.p_state);
-		fputs(buffer,fptr);
-		for (int i = 1; i <= 20 ; i++) {
-			fputs("\n",fptr);
-		}
-		fputs(p.p_message,fptr);
-		fclose(fptr);
-
-		fptr = fopen("client_protocol_data.txt" ,"r");
-		while(fgets(buffer, sizeof(buffer), fptr) != NULL) {
-			strcat(temp,buffer);
-		}
-		fclose(fptr);
-		send(sockfd,temp,sizeof(temp),0);
 //gui thong tin
+	FILE *fptr;
+	char buffer[1000];
+	char temp[1000];
+	fptr = fopen("client_protocol_data.txt","w");       /* if it is y or Y, then    */
+	p.p_state = AUTHENTICATE;
+	strcpy(p.p_message,WANT_TO_SIGNOUT);
+
+	sprintf(buffer, "%d", p.p_state);
+	fputs(buffer,fptr);
+	for (int i = 1; i <= 20 ; i++) {
+		fputs("\n",fptr);
+	}
+	fputs(p.p_message,fptr);
+	fclose(fptr);
+
+	fptr = fopen("client_protocol_data.txt" ,"r");
+	while(fgets(buffer, sizeof(buffer), fptr) != NULL) {
+		strcat(temp,buffer);
+	}
+	fclose(fptr);
+	send(sockfd,temp,sizeof(temp),0);
+//gui thong tin
+
           exit(0);                      /* exit.  Otherwise,        */
      }
      else
