@@ -24,13 +24,34 @@ void  INThandler(int sig)
 {
      char  c;
 
+	
+
+
      signal(sig, SIG_IGN);              /* disable Ctrl-C           */
      printf("Do you really want to quit? [y/n] ");
      c = getchar();                     /* read an input character  */
-     if (c == 'y' || c == 'Y'){          /* if it is y or Y, then    */
+     if (c == 'y' || c == 'Y'){
+		FILE *fptr;
+		char buffer[1000];
+		fptr = fopen("client_protocol_data.txt","w");       /* if it is y or Y, then    */
           p.p_state = AUTHENTICATE;
           strcpy(p.p_message,WANT_TO_SIGNOUT);
-          send(sockfd,&p,sizeof(protocol),0);
+		fwrite(&p.p_state, 1,  sizeof(int), fptr);
+		for (int temp = 1; temp <= 20 ; temp++) {
+			fwrite("\n", 1, sizeof(char), fptr);
+		}
+		fwrite(strcat(p.p_message, "\n"), 1,  sizeof(p.p_message), fptr);
+		fclose(fptr);
+
+		fptr = fopen("client_protocol_data.txt" ,"r");
+		while(fgets(buffer, sizeof(buffer), fptr) != NULL) {
+		}
+		fclose(fptr);
+
+
+          // send(sockfd,&p,sizeof(protocol),0);
+		send(sockfd,buffer,sizeof(buffer),0);
+
           exit(0);                      /* exit.  Otherwise,        */
      }
      else
@@ -86,7 +107,11 @@ int main(int argc, char* argv[])
 				//printf("%d %s %s\n",p.p_state,p.p_user_info.user_id,p.p_user_info.password );
 				t=signIn(&p);
 				if (t==-1) continue;
+
+
 				send(sockfd,&p,sizeof(protocol),0);
+
+				
 				recv(sockfd,&p,sizeof(protocol),0);
 				switch(p.p_state){
 					case CONNECTED: 
@@ -108,7 +133,11 @@ int main(int argc, char* argv[])
 			case 2: 
 				t=signUp(&p);
 				if(t==0||t==-1) continue;
+
+
 				send(sockfd,&p,sizeof(protocol),0);
+
+
 				recv(sockfd,&p,sizeof(protocol),0);
 				if (strcmp(p.p_message,SIGNUP_FAIL)==0){
 					printf("\n%s\n","This user_id is not valid or is exist" );			

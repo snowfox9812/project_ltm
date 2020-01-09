@@ -77,7 +77,31 @@ int main(int argc, char const *argv[]) {
         } else{
           if(FD_ISSET(conn_fd,&readfds)){
             protocol p;
-            int bytes_recv = recv(conn_fd,&p,sizeof(protocol),0);
+            FILE *fptr;
+            char buffer;
+            char temp;
+            fptr = fopen("server_protocol_data.txt", "w");
+
+            
+
+            // int bytes_recv = recv(conn_fd,&p,sizeof(protocol),0);
+
+            int bytes_recv = recv(conn_fd,buffer,sizeof(char),0);
+
+            fwrite(buffer, 1,  sizeof(char), fptr);
+            fclose(fptr);
+
+            fptr = fopen("server_protocol_data.txt", "r");
+            
+            fgets(temp, sizeof(char), fptr);
+            strcpy(p.p_state,temp);
+            for (int count = 1; count <= 19; count ++ ) {
+              fgets(temp, sizeof(char), fptr);
+            }
+            fgets(temp, sizeof(char), fptr);
+            strcpy(p.p_message, temp);
+            fclose(fptr);
+
             if(bytes_recv < 0){
               // Recv() error
               printf("receiving error\n" );
@@ -127,6 +151,8 @@ int main(int argc, char const *argv[]) {
 									}
                 }
               }
+
+
               send(conn_fd,&p,sizeof(protocol),0);
             }
           }
